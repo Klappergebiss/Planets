@@ -47,6 +47,7 @@ public:
     float getForeignGrav();
     void setForeignGrav(float someGrav);
     int getGravRadius();
+    bool hasMoved;
     
     std::list<Planet*>	mRangedPlanets; // planets in range to gravitate
     

@@ -35,7 +35,7 @@ void PlanetsApp::setup()
     setWindowPos(250, 50);
     setWindowSize(700, 700);
     
-    mPlanetManager.addPlanets(25);
+    mPlanetManager.addPlanets(5);
 }
 
 void PlanetsApp::mouseDown( MouseEvent event )

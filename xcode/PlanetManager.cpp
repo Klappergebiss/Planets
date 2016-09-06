@@ -9,6 +9,7 @@
 #include "cinder/app/App.h"
 #include "cinder/Rand.h"
 #include "cinder/Vector.h"
+#include "cinder/Timer.h"
 #include "PlanetManager.hpp"
 
 using namespace ci;
@@ -16,6 +17,7 @@ using std::list;
 
 PlanetManager::PlanetManager()
 {
+    freq = 99;
 }
 
 void PlanetManager::update()
@@ -30,18 +32,21 @@ void PlanetManager::update()
         
         (*p)->update();
         
-        if ( (*p)->getPos().x < -50 or (*p)->getPos().x > app::getWindowWidth()+50 or (*p)->getPos().y < -50 or (*p)->getPos().y > app::getWindowHeight()+50) {
+        if ( (*p)->getPos().x < -80 or (*p)->getPos().x > app::getWindowWidth()+80 or (*p)->getPos().y < -80 or (*p)->getPos().y > app::getWindowHeight()+80) {
             (*p)->mRangedPlanets.clear();
             p = mPlanets.erase(p);
         }
     }
-    if (mPlanets.size() <= 1) addPlanets(randInt(18,27)); //180,230 sind gut
+    if (mPlanets.size() <= 4 and freq > 26) freq = freq - randInt(-2,5);
+    if (randInt(1000001) % (int)freq == 0) addPlanets(1);
+    cout << "freq: " << freq << endl;
+    if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
 }
 
 void PlanetManager::draw()
 {
     for( list<Planet*>::iterator p = mPlanets.begin(); p != mPlanets.end(); ++p ){
-        (*p)->draw();
+        if ((*p)->hasMoved) (*p)->draw();
     }
 }
 
@@ -49,13 +54,18 @@ void PlanetManager::addPlanets( int amt )
 {
     for( int i=0; i<amt; i++ )
     {
-        float x = randFloat( app::getWindowWidth() );
-        float y = randFloat( app::getWindowHeight() );
-        float dirx = randFloat(-2.0, 2.0);
-        float diry = randFloat(-2.0, 2.0);
+        float x = randFloat(app::getWindowWidth());
+        float y = randFloat(app::getWindowHeight());
+        if ( randInt(2)) {
+            x = (randFloat(-70,-25) + randInt(2) * (app::getWindowWidth() + 95));
+        } else {
+            y = (randFloat(-70,-25) + randInt(2) * (app::getWindowHeight() + 95));
+        }
+                    // randFloat(app::getWindowHeight());
+        float dirx = randFloat(-1.2, 1.2);  //2.0, 2.0
+        float diry = randFloat(-1.2, 1.2);  //2.0, 2.0
         float speed = randFloat(1.0f);
-        float rad = randFloat(5.0, 45.0);
-//        mPlanets.push_back( Planet( vec2(x, y), dvec2(dirx, diry), speed, rad ) );
+        float rad = randFloat(5.0, 27.0);
         
 //        float x = app::getWindowWidth() * (i+1)/8.0;
 //        float y = app::getWindowHeight() * (i+1)/7.0;

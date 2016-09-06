@@ -20,4 +20,6 @@ public:
     void isInRange(Planet* planet1, Planet* planet2);
     
     std::list<Planet*>	mPlanets;
+    
+    int freq;
 };
