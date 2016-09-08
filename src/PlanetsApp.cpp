@@ -15,9 +15,9 @@ using namespace ci::geom;
 class PlanetsApp : public App {
   public:
 	void setup() override;
-	void mouseDown( MouseEvent event ) override;
 	void update() override;
 	void draw() override;
+    void keyDown( KeyEvent event) override;
     
 //    Planet *myPlanet;
 //    Planet *somePlanet;
@@ -32,15 +32,13 @@ void PlanetsApp::setup()
     time(&currentTime);
     
     randSeed((double)currentTime);
-    setWindowPos(250, 50);
-    setWindowSize(700, 700);
+    setWindowPos(0, 0);
+    setWindowSize(getDisplay()->getWidth(), getDisplay()->getHeight());
+    setFullScreen(true);
     
-    mPlanetManager.addPlanets(5);
+    mPlanetManager.addPlanets(5);  //5
 }
 
-void PlanetsApp::mouseDown( MouseEvent event )
-{
-}
 
 void PlanetsApp::update()
 {
@@ -62,10 +60,10 @@ void PlanetsApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );
     mPlanetManager.draw();
-//    gl::color(0.09f,0.22f,0.001f);
-//    gl::draw(*myPlanet);
-//    gl::color(0.32f, 0.02f, 0.001f);
-//    gl::draw(*somePlanet);
+}
+
+void PlanetsApp::keyDown( KeyEvent event) {
+    if (event.getCode() == KeyEvent::KEY_ESCAPE) setFullScreen(false);
 }
 
 CINDER_APP( PlanetsApp, RendererGl )

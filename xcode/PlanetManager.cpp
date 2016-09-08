@@ -37,9 +37,9 @@ void PlanetManager::update()
             p = mPlanets.erase(p);
         }
     }
-    if (mPlanets.size() <= 4 and freq > 26) freq = freq - randInt(-2,5);
+    if (mPlanets.size() <= 4 and freq > 21) freq = freq - randInt(-2,5);
     if (randInt(1000001) % (int)freq == 0) addPlanets(1);
-    cout << "freq: " << freq << endl;
+//    cout << "freq: " << freq << endl;
     if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
 }
 
