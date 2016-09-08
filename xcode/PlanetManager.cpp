@@ -26,7 +26,7 @@ void PlanetManager::update()
         if (mPlanets.size() > 1) {
             for( list<Planet*>::iterator q = mPlanets.begin(); q != mPlanets.end(); ++q) {
                 isInRange(*p, *q);
-                //            cout<<"p1: "<<&p<<"\n\tq2: "<<&q<<endl;
+                if ((*q)->isCollided) q = mPlanets.erase(q);
             }
         }
         
@@ -88,17 +88,11 @@ void PlanetManager::removePlanets( int amt )
 
 void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
     if(distance(planet1->getPos(), planet2->getPos()) != 0) {     //wenn planet1 != planet2
-        
-//        cout<<"distnace: "<<distance(planet1.getPos(), planet2.getPos())<<endl;
-//        cout<<"gravRad: "<<planet2.getGravRadius()<<endl;
-//        cout<<"planet1: "<<planet1<<"\tplanet2:"<<planet2<<endl;
-                                //planet1 in planet2.gravRadius
-        if (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos())) {
+                    //planet1 in planet2.gravRadius
+        if (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) {
+            planet1->collide(planet2);
+        } else if (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos())) {
             planet1->mRangedPlanets.push_back(planet2);      //planet1 wird von planet2 angezogen
-//            cout<<"yep"<<endl;
-        
-//        planet1.setForeignForce(planet2.getPos());    // yup...fertig!
-//        planet1.setForeignGrav(planet2.getGrav());    //* noch scalieren mit π usw.....
         }
     }
 }

@@ -47,7 +47,11 @@ public:
     float getForeignGrav();
     void setForeignGrav(float someGrav);
     int getGravRadius();
+    void updateRadius(int newRadius);
+    int getRadius();
+    
     bool hasMoved;
+    bool isCollided;
     
     std::list<Planet*>	mRangedPlanets; // planets in range to gravitate
     
@@ -55,6 +59,7 @@ public:
     void draw();
     
     void move();
+    void collide(Planet* somePlanet);
     
 };
 

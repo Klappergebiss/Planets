@@ -52,6 +52,7 @@ Planet::Planet(vec2 pos, dvec2 dir, float speed, int r) {
     mBlue = randFloat(0.05, 0.5);
     
     hasMoved = false;
+    isCollided = false;
     
     radius(mRadius);
     subdivisions(100);
@@ -119,14 +120,26 @@ int Planet::getGravRadius() {
     return mGravRadius;
 }
 
+void Planet::updateRadius(int newRadius) {
+    mRadius = newRadius;
+    radius(mRadius);
+    mMass = mRadius * 2 * M_PI;
+    mGrav = mMass * 0.000003f;
+    mGravRadius = mRadius * 5;
+}
+
+int Planet::getRadius() {
+    return mRadius;
+}
+
 void Planet::update() {
     if(mRangedPlanets.empty()) {
         setForeignForce(vec2(0,0));
         setForeignGrav(0.0f);
     } else {
         while(!mRangedPlanets.empty()) {
-            setForeignGrav(mRangedPlanets.back()->getGrav());//-0.000001f);
-            setForeignForce(mRangedPlanets.back()->getPos()); // * mRangedPlanets.back()->getGrav());
+            setForeignGrav(mRangedPlanets.back()->getGrav());
+            setForeignForce(mRangedPlanets.back()->getPos());
             mRangedPlanets.pop_back();
         }
     }
@@ -145,6 +158,15 @@ void Planet::move() {
     center(mPos);
     setDir(mDir + mForeignForce*mForeignGrav);
     hasMoved = true;
+}
+
+void Planet::collide(Planet* somePlanet) {
+    updateRadius( mRadius + somePlanet->getRadius() * 0.2f );
+    mRed = (mRed + somePlanet->mRed) * 0.5f;
+    mGreen = (mGreen + somePlanet->mGreen) * 0.5f;
+    mBlue = (mBlue + somePlanet->mBlue) * 0.5f;
+    somePlanet->isCollided = true;
+    
 }
 
 
