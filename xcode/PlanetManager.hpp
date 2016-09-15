@@ -22,4 +22,5 @@ public:
     std::list<Planet*>	mPlanets;
     
     int freq;
+    bool isCollide; 
 };

@@ -18,6 +18,8 @@ using std::list;
 PlanetManager::PlanetManager()
 {
     freq = 99;
+    isCollide = false;
+    
 }
 
 void PlanetManager::update()
@@ -26,7 +28,9 @@ void PlanetManager::update()
         if (mPlanets.size() > 1) {
             for( list<Planet*>::iterator q = mPlanets.begin(); q != mPlanets.end(); ++q) {
                 isInRange(*p, *q);
-                if ((*q)->isCollided) q = mPlanets.erase(q);
+                if (isCollide) {
+                    if ((*q)->isCollided) q = mPlanets.erase(q);
+                }
             }
         }
         
@@ -39,7 +43,6 @@ void PlanetManager::update()
     }
     if (mPlanets.size() <= 4 and freq > 21) freq = freq - randInt(-2,5);
     if (randInt(1000001) % (int)freq == 0) addPlanets(1);
-//    cout << "freq: " << freq << endl;
     if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
 }
 
@@ -89,9 +92,12 @@ void PlanetManager::removePlanets( int amt )
 void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
     if(distance(planet1->getPos(), planet2->getPos()) != 0) {     //wenn planet1 != planet2
                     //planet1 in planet2.gravRadius
-        if (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) {
-            planet1->collide(planet2);
-        } else if (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos())) {
+        if (isCollide) {
+            if (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) {
+                planet1->collide(planet2);  //planeten collidieren miteinander
+            }
+        }
+        if (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos())) {
             planet1->mRangedPlanets.push_back(planet2);      //planet1 wird von planet2 angezogen
         }
     }
