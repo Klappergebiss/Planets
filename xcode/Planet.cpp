@@ -25,8 +25,8 @@ Planet::Planet() {
     mForeignForce = vec2(0,0);
     mForeignDist = 0.0f;
     
-    mRed = randFloat(0.4);
-    mGreen = randFloat(0.8);
+    mRed = randFloat(0.6);
+    mGreen = randFloat(0.7);
     mBlue = randFloat(0.5);
     
     radius(mRadius);
@@ -41,13 +41,13 @@ Planet::Planet(vec2 pos, dvec2 dir, float speed, int r) {
     mSpeed = speed;
     
     mMass = mRadius * 2 * M_PI;
-    mGrav = mMass * 0.000003f;    //0.00001f;
+    mGrav = mMass * 0.000005f;    //0.00001f;
     mGravRadius = mRadius * 5;  //5
     mForeignGrav = 0.0f;
     mForeignForce = vec2(0,0);
     mForeignDist = 0.0f;
     
-    mRed = randFloat(0.05, 0.6);
+    mRed = randFloat(0.05, 0.7);
     mGreen = randFloat(0.05, 0.7);
     mBlue = randFloat(0.05, 0.5);
     

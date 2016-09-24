@@ -18,7 +18,7 @@ using std::list;
 PlanetManager::PlanetManager()
 {
     freq = 99;
-    isCollide = false;
+    isCollide = true;
     
 }
 
@@ -41,7 +41,7 @@ void PlanetManager::update()
             p = mPlanets.erase(p);
         }
     }
-    if (mPlanets.size() <= 4 and freq > 21) freq = freq - randInt(-2,5);
+    if (mPlanets.size() <= 6 and freq > 21) freq = freq - randInt(-2,5);
     if (randInt(1000001) % (int)freq == 0) addPlanets(1);
     if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
 }

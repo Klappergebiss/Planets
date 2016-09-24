@@ -37,6 +37,7 @@ void PlanetsApp::setup()
     setFullScreen(true);
     
     mPlanetManager.addPlanets(5);  //5
+    hideCursor();
 }
 
 
@@ -63,7 +64,10 @@ void PlanetsApp::draw()
 }
 
 void PlanetsApp::keyDown( KeyEvent event) {
-    if (event.getCode() == KeyEvent::KEY_ESCAPE) setFullScreen(false);
+    if (event.getCode() == KeyEvent::KEY_ESCAPE) {
+        setFullScreen(false);
+        showCursor();
+    }
     if (event.getCode() == 'c') mPlanetManager.isCollide = !mPlanetManager.isCollide;
 }
 
