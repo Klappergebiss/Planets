@@ -24,6 +24,10 @@ PlanetManager::PlanetManager()
 
 void PlanetManager::update()
 {
+    for (list<Star*>::iterator s = mStars.begin(); s != mStars.end(); ++s) {
+        (*s)->update();
+    }
+    
     for( list<Planet*>::iterator p = mPlanets.begin(); p != mPlanets.end(); ++p ){
         if (mPlanets.size() > 1) {
             for( list<Planet*>::iterator q = mPlanets.begin(); q != mPlanets.end(); ++q) {
@@ -48,6 +52,10 @@ void PlanetManager::update()
 
 void PlanetManager::draw()
 {
+    for( list<Star*>::iterator s = mStars.begin(); s != mStars.end(); ++s ){
+        (*s)->draw();
+    }
+    
     for( list<Planet*>::iterator p = mPlanets.begin(); p != mPlanets.end(); ++p ){
         if ((*p)->hasMoved) (*p)->draw();
     }
@@ -64,18 +72,12 @@ void PlanetManager::addPlanets( int amt )
         } else {
             y = (randFloat(-70,-25) + randInt(2) * (app::getWindowHeight() + 95));
         }
-                    // randFloat(app::getWindowHeight());
+
         float dirx = randFloat(-1.2, 1.2);  //2.0, 2.0
         float diry = randFloat(-1.2, 1.2);  //2.0, 2.0
         float speed = randFloat(1.0f);
         float rad = randFloat(5.0, 27.0);
         
-//        float x = app::getWindowWidth() * (i+1)/8.0;
-//        float y = app::getWindowHeight() * (i+1)/7.0;
-//        float dirx = -i-0.01;
-//        float diry = 0;
-//        float speed = 0.1f;
-//        float rad = 5*(i+1);
         Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, rad );
         mPlanets.push_back(tempPlanet);
     }
@@ -104,7 +106,12 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
 }
 
 
-
+void PlanetManager::addStars( int amt ) {
+    for( int i=0; i<amt; i++) {
+        Star* tempStar = new Star();
+        mStars.push_back(tempStar);
+    }
+}
 
 
 

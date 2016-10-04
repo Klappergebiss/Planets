@@ -36,6 +36,8 @@ void PlanetsApp::setup()
     setWindowSize(getDisplay()->getWidth(), getDisplay()->getHeight());
     setFullScreen(true);
     
+    mPlanetManager.addStars(120);
+    
     mPlanetManager.addPlanets(5);  //5
     hideCursor();
 }
@@ -45,16 +47,6 @@ void PlanetsApp::update()
 {
     mPlanetManager.update();
     
-    /*
-    // wenn:
-    if (somePlanet->getGravRadius() > sqrt( pow( ((somePlanet->getPos() - myPlanet->getPos()).x), 2) + pow( ((somePlanet->getPos() - myPlanet->getPos()).y), 2) ) ) {
-        myPlanet->setForeignForce(somePlanet->getPos());
-        myPlanet->setForeignGrav(somePlanet->getGrav());    // noch scalieren mit π usw.....
-    } else {
-        myPlanet->setForeignGrav(0.0f);
-    }
-    myPlanet->move();
-     */
 }
 
 void PlanetsApp::draw()

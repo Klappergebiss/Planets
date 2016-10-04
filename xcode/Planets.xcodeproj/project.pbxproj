@@ -17,6 +17,7 @@
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
 		4C28476B1D19CF8600C07415 /* PlanetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C2847691D19CF8600C07415 /* PlanetManager.cpp */; };
+		4C3F1DF61DA2A8830085DDCE /* Star.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F1DF41DA2A8830085DDCE /* Star.cpp */; };
 		4C5DD9681D0B575F00E9273C /* Planet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C5DD9661D0B575F00E9273C /* Planet.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -42,6 +43,8 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4C2847691D19CF8600C07415 /* PlanetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlanetManager.cpp; sourceTree = "<group>"; };
 		4C28476A1D19CF8600C07415 /* PlanetManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlanetManager.hpp; sourceTree = "<group>"; };
+		4C3F1DF41DA2A8830085DDCE /* Star.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Star.cpp; sourceTree = "<group>"; };
+		4C3F1DF51DA2A8830085DDCE /* Star.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Star.hpp; sourceTree = "<group>"; };
 		4C5DD9661D0B575F00E9273C /* Planet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Planet.cpp; sourceTree = "<group>"; };
 		4C5DD9671D0B575F00E9273C /* Planet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Planet.hpp; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
@@ -85,6 +88,8 @@
 				0BE09CA89B254F8088C8D707 /* PlanetsApp.cpp */,
 				4C5DD9661D0B575F00E9273C /* Planet.cpp */,
 				4C5DD9671D0B575F00E9273C /* Planet.hpp */,
+				4C3F1DF41DA2A8830085DDCE /* Star.cpp */,
+				4C3F1DF51DA2A8830085DDCE /* Star.hpp */,
 				4C2847691D19CF8600C07415 /* PlanetManager.cpp */,
 				4C28476A1D19CF8600C07415 /* PlanetManager.hpp */,
 			);
@@ -233,6 +238,7 @@
 				4C28476B1D19CF8600C07415 /* PlanetManager.cpp in Sources */,
 				DD0FEF0C257348F4A4462D20 /* PlanetsApp.cpp in Sources */,
 				4C5DD9681D0B575F00E9273C /* Planet.cpp in Sources */,
+				4C3F1DF61DA2A8830085DDCE /* Star.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

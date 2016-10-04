@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Planet.hpp"
+#include "Star.hpp"
 #include <list>
 
 class PlanetManager {
@@ -19,7 +20,10 @@ public:
     void removePlanets( int amt );
     void isInRange(Planet* planet1, Planet* planet2);
     
+    void addStars( int amt );
+    
     std::list<Planet*>	mPlanets;
+    std::list<Star*>    mStars;
     
     int freq;
     bool isCollide; 
