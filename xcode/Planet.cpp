@@ -137,7 +137,7 @@ void Planet::collide(Planet* somePlanet) {
     mRed = (mRed * mRadius + somePlanet->mRed * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
     mGreen = (mGreen * mRadius + somePlanet->mGreen * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
     mBlue = (mBlue * mRadius + somePlanet->mBlue * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
-    updateRadius( mRadius + somePlanet->getRadius() * 0.3f );
+    updateRadius( mRadius + somePlanet->getRadius() * 0.2f );
     somePlanet->isCollided = true;
     
 }
