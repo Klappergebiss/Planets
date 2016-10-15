@@ -18,13 +18,13 @@ public:
     void draw();
     void addPlanets( int amt );
     void removePlanets( int amt );
-    void isInRange(Planet* planet1, Planet* planet2);
-    
     void addStars( int amt );
+    void isInRange(Planet* planet1, Planet* planet2);
+    void explodePlanet(Planet* planet);
     
     std::list<Planet*>	mPlanets;
     std::list<Star*>    mStars;
     
     int freq;
-    bool isCollide; 
+    bool enableCollide;
 };

@@ -15,12 +15,16 @@
 using namespace ci;
 using std::list;
 
+#pragma mark - initialize
+
 PlanetManager::PlanetManager()
 {
     freq = 99;
-    isCollide = true;
+    enableCollide = true;
     
 }
+
+#pragma mark - update
 
 void PlanetManager::update()
 {
@@ -32,13 +36,19 @@ void PlanetManager::update()
         if (mPlanets.size() > 1) {
             for( list<Planet*>::iterator q = mPlanets.begin(); q != mPlanets.end(); ++q) {
                 isInRange(*p, *q);
-                if (isCollide) {
+                if (enableCollide) {
                     if ((*q)->isCollided) q = mPlanets.erase(q);
                 }
             }
         }
         
         (*p)->update();
+        
+        if ((*p)->getRadius() > 60) {
+            (*p)->mRangedPlanets.clear();
+            explodePlanet(*p);
+            p = mPlanets.erase(p);
+        }
         
         if ( (*p)->getPos().x < -80 or (*p)->getPos().x > app::getWindowWidth()+80 or (*p)->getPos().y < -80 or (*p)->getPos().y > app::getWindowHeight()+80) {
             (*p)->mRangedPlanets.clear();
@@ -61,6 +71,8 @@ void PlanetManager::draw()
     }
 }
 
+#pragma mark - add/remove
+
 void PlanetManager::addPlanets( int amt )
 {
     for( int i=0; i<amt; i++ )
@@ -75,7 +87,7 @@ void PlanetManager::addPlanets( int amt )
 
         float dirx = randFloat(-1.2, 1.2);  //2.0, 2.0
         float diry = randFloat(-1.2, 1.2);  //2.0, 2.0
-        float speed = randFloat(0.5f);
+        float speed = randFloat(0.2f);
         float rad = randFloat(5.0, 27.0);
         
         Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, rad );
@@ -91,10 +103,19 @@ void PlanetManager::removePlanets( int amt )
     }
 }
 
+void PlanetManager::addStars( int amt ) {
+    for( int i=0; i<amt; i++) {
+        Star* tempStar = new Star();
+        mStars.push_back(tempStar);
+    }
+}
+
+#pragma mark - planetary actions
+
 void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
     if(distance(planet1->getPos(), planet2->getPos()) != 0) {     //wenn planet1 != planet2
                     //planet1 in planet2.gravRadius
-        if (isCollide) {
+        if (enableCollide) {
             if (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) {
                 planet1->collide(planet2);  //planeten collidieren miteinander
             }
@@ -105,23 +126,50 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
     }
 }
 
-
-void PlanetManager::addStars( int amt ) {
-    for( int i=0; i<amt; i++) {
-        Star* tempStar = new Star();
-        mStars.push_back(tempStar);
+void PlanetManager::explodePlanet (Planet* planet) {
+    vec2 oldPos = planet->getPos();
+    float oldRad = planet->getRadius()*0.6;
+    int amt = randInt(5,13);
+    float newRad = 2*planet->getRadius()/(float)amt;
+    
+    for (int i = 1; i<=amt; i++) {
+        float x = oldPos.x;
+        float y = oldPos.y;
+        switch (i%4) {
+            case 0:
+                x += i * (oldRad/(float)amt);
+                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                break;
+            case 1:
+                x -= i * (oldRad/(float)amt);
+                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                break;
+            case 2:
+                x -= i * (oldRad/(float)amt);
+                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                break;
+            default:
+                x += i * (oldRad/(float)amt);
+                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                break;
+        }
+//        float x = oldPos.x + i * (oldRad/(float)amt);  //y = ym ± √(r^2 - (x-xm)^2)
+//        float y = oldPos.y + sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+        float dirx = (x - oldPos.x)*randFloat(0.2,0.25);
+        float diry = (y - oldPos.y)*randFloat(0.2,0.25);
+        float speed = 0.2;
+        newRad += randFloat(-4.0,4.0);
+        
+        Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, newRad );
+        mPlanets.push_back(tempPlanet);
     }
 }
 
 
 
 
-
-
-
-
-
-
+/// To-Do
+/// manchmal wegen explodePlanet() BAD_ACCESS auf (*p)->getRadius() in update()...wieso??? immernoch???
 
 
 

@@ -65,7 +65,7 @@ void PlanetsApp::keyDown( KeyEvent event) {
         setFullScreen(false);
         showCursor();
     }
-    if (event.getCode() == 'c') mPlanetManager.isCollide = !mPlanetManager.isCollide;
+    if (event.getCode() == 'c') mPlanetManager.enableCollide = !mPlanetManager.enableCollide;
 }
 
 CINDER_APP( PlanetsApp, RendererGl )
