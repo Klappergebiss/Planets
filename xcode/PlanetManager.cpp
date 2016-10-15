@@ -75,7 +75,7 @@ void PlanetManager::addPlanets( int amt )
 
         float dirx = randFloat(-1.2, 1.2);  //2.0, 2.0
         float diry = randFloat(-1.2, 1.2);  //2.0, 2.0
-        float speed = randFloat(1.0f);
+        float speed = randFloat(0.5f);
         float rad = randFloat(5.0, 27.0);
         
         Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, rad );

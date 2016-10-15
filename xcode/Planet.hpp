@@ -29,12 +29,10 @@ class Planet : public Circle {
     
     float mForeignGrav; // some gravity
     vec2 mForeignForce; // direction of foreign grav
-    float mForeignDist; // distance to foreign planet
     float mRed, mGreen, mBlue;         // colors of planet to be drawn
     
 
 public:
-    Planet();
     Planet(vec2 pos, dvec2 dir, float speed, int r);
     ~Planet();
     vec2 getPos();
@@ -42,9 +40,7 @@ public:
     vec2 getDir();
     void setDir(vec2 dir);
     float getGrav();
-    vec2 getForeignForce();
     void setForeignForce(vec2 someForce);
-    float getForeignGrav();
     void setForeignGrav(float someGrav);
     int getGravRadius();
     void updateRadius(int newRadius);

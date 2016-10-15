@@ -12,27 +12,7 @@
 
 using std::list;
 
-Planet::Planet() {
-    mPos = vec2(randFloat(700), randFloat(700));
-    mDir = randVec2() * randFloat(1,5);
-    mRadius = randInt(1,40);
-    mSpeed = randFloat(2.5f);
-    
-    mMass = mRadius * 2 * M_PI;
-    mGrav = mMass * 0.0025f;
-    mGravRadius = mRadius * 2;
-    mForeignGrav = 0.0f;
-    mForeignForce = vec2(0,0);
-    mForeignDist = 0.0f;
-    
-    mRed = randFloat(0.6);
-    mGreen = randFloat(0.7);
-    mBlue = randFloat(0.5);
-    
-    radius(mRadius);
-    subdivisions(100);
-    
-}
+#pragma mark - Planet Instance
 
 Planet::Planet(vec2 pos, dvec2 dir, float speed, int r) {
     mPos = pos;
@@ -41,11 +21,10 @@ Planet::Planet(vec2 pos, dvec2 dir, float speed, int r) {
     mSpeed = speed;
     
     mMass = mRadius * 2 * M_PI;
-    mGrav = mMass * 0.000005f;    //0.00001f;
-    mGravRadius = mRadius * 5;  //5
+    mGrav = mMass * 0.000005f;
+    mGravRadius = mRadius * 5;
     mForeignGrav = 0.0f;
     mForeignForce = vec2(0,0);
-    mForeignDist = 0.0f;
     
     mRed = randFloat(0.05, 0.7);
     mGreen = randFloat(0.05, 0.7);
@@ -69,56 +48,55 @@ Planet::~Planet() {
     delete &mGravRadius;
     delete &mForeignGrav;
     delete &mForeignForce;
-    delete &mForeignDist;
     
     delete &mRed;
     delete &mGreen;
     delete &mBlue;
     
     mRangedPlanets.clear();
-    
-
 }
+
+#pragma mark - get-methods
 
 vec2 Planet::getPos() {
     return mPos;
-}
-
-void Planet::setPos(vec2 pos) {
-    mPos = pos;
 }
 
 vec2 Planet::getDir() {
     return mDir;
 }
 
-void Planet::setDir(vec2 dir) {
-    mDir = dir;
+int Planet::getGravRadius() {
+    return mGravRadius;
 }
 
 float Planet::getGrav() {
     return mGrav;
 }
 
-void Planet::setForeignForce(vec2 someForce) {
-    mForeignForce += (someForce - getPos()) * getForeignGrav();
+int Planet::getRadius() {
+    return mRadius;
 }
 
-vec2 Planet::getForeignForce() {
-    return mForeignForce;
+#pragma mark - set-methods
+
+void Planet::setPos(vec2 pos) {
+    mPos = pos;
+}
+
+void Planet::setDir(vec2 dir) {
+    mDir = dir;
+}
+
+void Planet::setForeignForce(vec2 someForce) {
+    mForeignForce += (someForce - mPos) * mForeignGrav;
 }
 
 void Planet::setForeignGrav(float someGrav) {
     mForeignGrav = someGrav;
 }
 
-float Planet::getForeignGrav() {
-    return mForeignGrav;
-}
-
-int Planet::getGravRadius() {
-    return mGravRadius;
-}
+#pragma mark - update
 
 void Planet::updateRadius(int newRadius) {
     mRadius = newRadius;
@@ -128,18 +106,14 @@ void Planet::updateRadius(int newRadius) {
     mGravRadius = mRadius * 5;
 }
 
-int Planet::getRadius() {
-    return mRadius;
-}
-
 void Planet::update() {
     if(mRangedPlanets.empty()) {
         setForeignForce(vec2(0,0));
         setForeignGrav(0.0f);
     } else {
         while(!mRangedPlanets.empty()) {
-            setForeignGrav(mRangedPlanets.back()->getGrav());
             setForeignForce(mRangedPlanets.back()->getPos());
+            setForeignGrav(mRangedPlanets.back()->getGrav());
             mRangedPlanets.pop_back();
         }
     }
@@ -152,11 +126,10 @@ void Planet::draw() {
     gl::draw(*this);
 }
 
-
 void Planet::move() {
     setPos(mPos + mDir*mSpeed + mForeignForce);
     center(mPos);
-    setDir(mDir + mForeignForce*mForeignGrav);
+    setDir(mDir + mForeignForce * mForeignGrav);
     hasMoved = true;
 }
 
@@ -169,8 +142,3 @@ void Planet::collide(Planet* somePlanet) {
     
 }
 
-
-
-
-//rangedPlanets wird net wirklich gefüllt....
-//weil nur referenzen in listen bearbeitet werden!!

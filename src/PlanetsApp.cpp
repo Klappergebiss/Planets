@@ -19,15 +19,13 @@ class PlanetsApp : public App {
 	void draw() override;
     void keyDown( KeyEvent event) override;
     
-//    Planet *myPlanet;
-//    Planet *somePlanet;
-    
     PlanetManager mPlanetManager;
-    
+//    int test;
 };
 
 void PlanetsApp::setup()
 {
+//    test = 10;
     time_t currentTime;
     time(&currentTime);
     
@@ -51,7 +49,14 @@ void PlanetsApp::update()
 
 void PlanetsApp::draw()
 {
-	gl::clear( Color( 0, 0, 0 ) );
+	gl::clear( Color( 0, 0, 0 ) );  //not when test
+    
+    /*
+     if (test != 0) {
+        gl::clear( Color( 0, 0, 0 ) );
+        test--;
+     }
+     */
     mPlanetManager.draw();
 }
 
