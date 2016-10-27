@@ -88,6 +88,10 @@ void Planet::setDir(vec2 dir) {
     mDir = dir;
 }
 
+void Planet::invForeignForce(vec2 someForce) {
+    mForeignForce += (mPos - someForce) * mForeignGrav * 100.0f;    //evtl 200 od 50 ??
+}
+
 void Planet::setForeignForce(vec2 someForce) {
     mForeignForce += (someForce - mPos) * mForeignGrav;
 }
@@ -112,8 +116,10 @@ void Planet::update() {
         setForeignGrav(0.0f);
     } else {
         while(!mRangedPlanets.empty()) {
-            setForeignForce(mRangedPlanets.back()->getPos());
             setForeignGrav(mRangedPlanets.back()->getGrav());
+            if(mRangedPlanets.back()->isCollided) {
+                invForeignForce(mRangedPlanets.back()->getPos());
+            } else setForeignForce(mRangedPlanets.back()->getPos());
             mRangedPlanets.pop_back();
         }
     }

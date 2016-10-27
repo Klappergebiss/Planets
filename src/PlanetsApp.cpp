@@ -36,7 +36,7 @@ void PlanetsApp::setup()
     
     mPlanetManager.addStars(120);
     
-    mPlanetManager.addPlanets(5);  //5
+    mPlanetManager.addPlanets(11);  //5
     hideCursor();
 }
 
@@ -49,14 +49,14 @@ void PlanetsApp::update()
 
 void PlanetsApp::draw()
 {
-	gl::clear( Color( 0, 0, 0 ) );  //not when test
+	gl::clear( Color( 0, 0, 0 ) );  //not if test
     
     /*
      if (test != 0) {
         gl::clear( Color( 0, 0, 0 ) );
         test--;
      }
-     */
+    */
     mPlanetManager.draw();
 }
 

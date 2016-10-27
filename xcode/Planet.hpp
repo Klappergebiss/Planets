@@ -40,6 +40,7 @@ public:
     vec2 getDir();
     void setDir(vec2 dir);
     float getGrav();
+    void invForeignForce(vec2 someForce);
     void setForeignForce(vec2 someForce);
     void setForeignGrav(float someGrav);
     int getGravRadius();

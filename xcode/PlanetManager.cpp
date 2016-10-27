@@ -36,9 +36,7 @@ void PlanetManager::update()
         if (mPlanets.size() > 1) {
             for( list<Planet*>::iterator q = mPlanets.begin(); q != mPlanets.end(); ++q) {
                 isInRange(*p, *q);
-                if (enableCollide) {
-                    if ((*q)->isCollided) q = mPlanets.erase(q);
-                }
+                if ((*q)->isCollided) q = mPlanets.erase(q);
             }
         }
         
@@ -55,7 +53,7 @@ void PlanetManager::update()
             p = mPlanets.erase(p);
         }
     }
-    if (mPlanets.size() <= 6 and freq > 21) freq = freq - randInt(-2,5);
+    if (mPlanets.size() <= 9 and freq > 21) freq = freq - randInt(-2,5);
     if (randInt(1000001) % (int)freq == 0) addPlanets(1);
     if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
 }
@@ -117,7 +115,7 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
                     //planet1 in planet2.gravRadius
         if (enableCollide) {
             if (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) {
-                planet1->collide(planet2);  //planeten collidieren miteinander
+                planet1->collide(planet2);  //planet2 collidiert in planet1
             }
         }
         if (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos())) {
@@ -130,7 +128,7 @@ void PlanetManager::explodePlanet (Planet* planet) {
     vec2 oldPos = planet->getPos();
     float oldRad = planet->getRadius()*0.6;
     int amt = randInt(5,13);
-    float newRad = 2*planet->getRadius()/(float)amt;
+    float newRad = 2.5*planet->getRadius()/(float)amt;
     
     for (int i = 1; i<=amt; i++) {
         float x = oldPos.x;
@@ -157,7 +155,7 @@ void PlanetManager::explodePlanet (Planet* planet) {
 //        float y = oldPos.y + sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
         float dirx = (x - oldPos.x)*randFloat(0.2,0.25);
         float diry = (y - oldPos.y)*randFloat(0.2,0.25);
-        float speed = 0.2;
+        float speed = 0.3;
         newRad += randFloat(-4.0,4.0);
         
         Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, newRad );
