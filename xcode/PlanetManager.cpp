@@ -127,32 +127,31 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
 void PlanetManager::explodePlanet (Planet* planet) {
     vec2 oldPos = planet->getPos();
     float oldRad = planet->getRadius()*0.6;
-    int amt = randInt(5,13);
-    float newRad = 2.5*planet->getRadius()/(float)amt;
+    int amt = randInt(7,18);
+    float newRad = 2.2*planet->getRadius()/(float)amt;
     
     for (int i = 1; i<=amt; i++) {
         float x = oldPos.x;
         float y = oldPos.y;
         switch (i%4) {
             case 0:
-                x += i * (oldRad/(float)amt);
-                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                x += i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
+                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
                 break;
             case 1:
-                x -= i * (oldRad/(float)amt);
-                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                x -= i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
+                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
                 break;
             case 2:
-                x -= i * (oldRad/(float)amt);
-                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                x -= i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
+                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
                 break;
             default:
-                x += i * (oldRad/(float)amt);
-                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+                x += i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
+                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
                 break;
         }
-//        float x = oldPos.x + i * (oldRad/(float)amt);  //y = ym ± √(r^2 - (x-xm)^2)
-//        float y = oldPos.y + sqrt(pow(oldRad,2) - pow((x - oldPos.x),2));
+
         float dirx = (x - oldPos.x)*randFloat(0.2,0.25);
         float diry = (y - oldPos.y)*randFloat(0.2,0.25);
         float speed = 0.3;
@@ -162,12 +161,4 @@ void PlanetManager::explodePlanet (Planet* planet) {
         mPlanets.push_back(tempPlanet);
     }
 }
-
-
-
-
-/// To-Do
-/// manchmal wegen explodePlanet() BAD_ACCESS auf (*p)->getRadius() in update()...wieso??? immernoch???
-
-
 

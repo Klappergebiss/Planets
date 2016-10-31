@@ -89,7 +89,7 @@ void Planet::setDir(vec2 dir) {
 }
 
 void Planet::invForeignForce(vec2 someForce) {
-    mForeignForce += (mPos - someForce) * mForeignGrav * 100.0f;    //evtl 200 od 50 ??
+    mForeignForce += (mPos - someForce) * mForeignGrav * 70.0f;    //evtl 200 od 50 ??
 }
 
 void Planet::setForeignForce(vec2 someForce) {
