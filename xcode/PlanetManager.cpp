@@ -9,7 +9,6 @@
 #include "cinder/app/App.h"
 #include "cinder/Rand.h"
 #include "cinder/Vector.h"
-#include "cinder/Timer.h"
 #include "PlanetManager.hpp"
 
 using namespace ci;

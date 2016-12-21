@@ -56,7 +56,10 @@ void Star::move() {
     direction.x = direction.x / app::getWindowWidth();
     direction.y = direction.y / app::getWindowHeight();
 
-    setPos(mPos + vec2(sin(app::getElapsedFrames()/500.0f)*direction.y*0.2, -sin(app::getElapsedFrames()/500.0f)*direction.x*0.2));
+    float alpha = 310.0f;   //app::getElapsedFrames()/500.0f;
+    setPos(mPos + vec2(((cos(alpha) * direction.x - sin(alpha) * direction.y)*0.2), ((sin(alpha) * direction.x + cos(alpha) * direction.y)*0.2)));
+    
+//    setPos(mPos + vec2(sin(alpha)*direction.y*0.2, -sin(alpha)*direction.x*0.2));
     center(mPos);
 }
 
