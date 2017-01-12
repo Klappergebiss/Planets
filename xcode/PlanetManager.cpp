@@ -126,7 +126,7 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
 void PlanetManager::explodePlanet (Planet* planet) {
     vec2 oldPos = planet->getPos();
     float oldRad = planet->getRadius()*0.6;
-    int amt = randInt(7,18);
+    int amt = randInt(7,15);
     float newRad = 2.2*planet->getRadius()/(float)amt;
     
     for (int i = 1; i<=amt; i++) {
@@ -154,7 +154,7 @@ void PlanetManager::explodePlanet (Planet* planet) {
         float dirx = (x - oldPos.x)*randFloat(0.2,0.25);
         float diry = (y - oldPos.y)*randFloat(0.2,0.25);
         float speed = 0.3;
-        newRad += randFloat(-4.0,4.0);
+        newRad += randFloat(-3.0,4.0);
         
         Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, newRad );
         mPlanets.push_back(tempPlanet);
