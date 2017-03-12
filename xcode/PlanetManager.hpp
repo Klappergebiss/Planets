@@ -19,6 +19,7 @@ public:
     void addPlanets( int amt );
     void removePlanets( int amt );
     void addStars( int amt );
+    void addBlackHole();
     void isInRange(Planet* planet1, Planet* planet2);
     void explodePlanet(Planet* planet);
     
@@ -27,4 +28,5 @@ public:
     
     int freq;
     bool enableCollide;
+    bool hasBlackHole;
 };

@@ -33,7 +33,7 @@ class Planet : public Circle {
     
 
 public:
-    Planet(vec2 pos, dvec2 dir, float speed, int r);
+    Planet(vec2 pos, vec2 dir, float speed, int r, bool isBlackHole);
     ~Planet();
     vec2 getPos();
     void setPos(vec2 pos);
@@ -49,6 +49,7 @@ public:
     
     bool hasMoved;
     bool isCollided;
+    bool isBlackHole;
     
     std::list<Planet*>	mRangedPlanets; // planets in range to gravitate
     

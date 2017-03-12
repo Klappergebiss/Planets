@@ -14,27 +14,41 @@ using std::list;
 
 #pragma mark - Planet Instance
 
-Planet::Planet(vec2 pos, dvec2 dir, float speed, int r) {
+Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool isBlackHole) {
     mPos = pos;
     mDir = dir;
     mRadius = r;
     mSpeed = speed;
     
-    mMass = mRadius * 2 * M_PI;
-    mGrav = mMass * 0.000005f;
-    mGravRadius = mRadius * 5;
     mForeignGrav = 0.0f;
     mForeignForce = vec2(0,0);
-    
-    mRed = randFloat(0.05, 0.7);
-    mGreen = randFloat(0.05, 0.7);
-    mBlue = randFloat(0.05, 0.5);
     
     hasMoved = false;
     isCollided = false;
     
     radius(mRadius);
-    subdivisions(100);
+    
+    if(!isBlackHole) {
+        mMass = mRadius * 2 * M_PI;
+        mGrav = mMass * 0.000003f;
+        mGravRadius = mRadius * 5;
+        
+        mRed = randFloat(0.05, 0.7);
+        mGreen = randFloat(0.05, 0.7);
+        mBlue = randFloat(0.05, 0.5);
+        
+        subdivisions(100);
+    } else {
+        mMass = mRadius * 2 * M_PI;
+        mGrav = mMass * 0.0005f;
+        mGravRadius = mRadius * 7;
+        
+        mRed = 0.1f;
+        mGreen = 0.1f;
+        mBlue = 0.1f;
+        
+        subdivisions(23);
+    }
 }
 
 Planet::~Planet() {
@@ -88,6 +102,7 @@ void Planet::setDir(vec2 dir) {
     mDir = dir;
 }
 
+    // to push bigger planet into direction of collided one
 void Planet::invForeignForce(vec2 someForce) {
     mForeignForce += (mPos - someForce) * mForeignGrav * 70.0f;    //evtl 200 od 50 ??
 }
@@ -106,8 +121,14 @@ void Planet::updateRadius(int newRadius) {
     mRadius = newRadius;
     radius(mRadius);
     mMass = mRadius * 2 * M_PI;
-    mGrav = mMass * 0.000003f;
-    mGravRadius = mRadius * 5;
+    
+    if(!isBlackHole) {
+        mGrav = mMass * 0.000003f;
+        mGravRadius = mRadius * 5;
+    } else {
+        mGrav = mMass * 0.0005f;
+        mGravRadius = mRadius * 7;
+    }
 }
 
 void Planet::update() {
@@ -116,10 +137,18 @@ void Planet::update() {
         setForeignGrav(0.0f);
     } else {
         while(!mRangedPlanets.empty()) {
-            setForeignGrav(mRangedPlanets.back()->getGrav());
-            if(mRangedPlanets.back()->isCollided) {
-                invForeignForce(mRangedPlanets.back()->getPos());
-            } else setForeignForce(mRangedPlanets.back()->getPos());
+            if (!mRangedPlanets.back()->isBlackHole || !isBlackHole) {
+                setForeignGrav(mRangedPlanets.back()->getGrav());
+                if(mRangedPlanets.back()->isCollided) {
+                    invForeignForce(mRangedPlanets.back()->getPos());
+                } else setForeignForce(mRangedPlanets.back()->getPos());
+            } else {
+                setForeignGrav(0.0f);
+                if(mRangedPlanets.back()->isCollided) {
+                    invForeignForce(vec2(0,0));
+                } else setForeignForce(vec2(0,0));
+//                mRangedPlanets.pop_back();
+            }
             mRangedPlanets.pop_back();
         }
     }
@@ -133,17 +162,29 @@ void Planet::draw() {
 }
 
 void Planet::move() {
-    setPos(mPos + mDir*mSpeed + mForeignForce);
-    center(mPos);
-    setDir(mDir + mForeignForce * mForeignGrav);
-    hasMoved = true;
+    if(!isBlackHole) {
+        setPos(mPos + mDir*mSpeed + mForeignForce);
+        center(mPos);
+        setDir(mDir + mForeignForce * mForeignGrav);
+        hasMoved = true;
+    } else {
+        setPos(mPos);
+        center(mPos);
+        setDir(mDir);
+        hasMoved = true;
+    }
 }
 
 void Planet::collide(Planet* somePlanet) {
-    mRed = (mRed * mRadius + somePlanet->mRed * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
-    mGreen = (mGreen * mRadius + somePlanet->mGreen * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
-    mBlue = (mBlue * mRadius + somePlanet->mBlue * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
-    updateRadius( mRadius + somePlanet->getRadius() * 0.2f );
+    if(!isBlackHole) {
+        mRed = (mRed * mRadius + somePlanet->mRed * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
+        mGreen = (mGreen * mRadius + somePlanet->mGreen * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
+        mBlue = (mBlue * mRadius + somePlanet->mBlue * somePlanet->getRadius() ) / (mRadius+somePlanet->getRadius());
+        
+        updateRadius( mRadius + somePlanet->getRadius() * 0.2f );
+    } else { // if blackhole
+        updateRadius( mRadius + somePlanet->getRadius() * 0.1f );
+    }
     somePlanet->isCollided = true;
     
 }

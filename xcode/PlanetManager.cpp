@@ -20,6 +20,7 @@ PlanetManager::PlanetManager()
 {
     freq = 99;
     enableCollide = true;
+    hasBlackHole = false;
     
 }
 
@@ -35,26 +36,35 @@ void PlanetManager::update()
         if (mPlanets.size() > 1) {
             for( list<Planet*>::iterator q = mPlanets.begin(); q != mPlanets.end(); ++q) {
                 isInRange(*p, *q);
+                // if planet collided -> removes from the list...
                 if ((*q)->isCollided) q = mPlanets.erase(q);
             }
         }
         
         (*p)->update();
         
+            // if planet gets too huge, it explodes
         if ((*p)->getRadius() > 60) {
             (*p)->mRangedPlanets.clear();
             explodePlanet(*p);
             p = mPlanets.erase(p);
         }
         
+            // if planet leaves screen, it despawns (offset of 80 px for smoother look)
         if ( (*p)->getPos().x < -80 or (*p)->getPos().x > app::getWindowWidth()+80 or (*p)->getPos().y < -80 or (*p)->getPos().y > app::getWindowHeight()+80) {
             (*p)->mRangedPlanets.clear();
             p = mPlanets.erase(p);
         }
     }
+    
+        // balancing of amount of planets...
     if (mPlanets.size() <= 9 and freq > 21) freq = freq - randInt(-2,5);
     if (randInt(1000001) % (int)freq == 0) addPlanets(1);
     if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
+    if ( !hasBlackHole && (randInt(1000001) % 1301 == 0)) {
+        addBlackHole();
+        hasBlackHole = true;
+    }
 }
 
 void PlanetManager::draw()
@@ -87,7 +97,7 @@ void PlanetManager::addPlanets( int amt )
         float speed = randFloat(0.2f);
         float rad = randFloat(5.0, 27.0);
         
-        Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, rad );
+        Planet* tempPlanet = new Planet( vec2(x, y), vec2(dirx, diry), speed, rad, false);
         mPlanets.push_back(tempPlanet);
     }
 }
@@ -107,18 +117,34 @@ void PlanetManager::addStars( int amt ) {
     }
 }
 
+void PlanetManager::addBlackHole() {
+    float x = (app::getWindowWidth()*0.5f) + randFloat(-30,30);
+    float y = (app::getWindowHeight()*0.5f) + randFloat(-20,20);
+    
+    float dirx = 0.0f;
+    float diry = 0.0f;
+    float speed = 0.0f;
+    float rad = 15.0f;
+    
+    Planet* tempPlanet = new Planet( vec2(x, y), vec2(dirx, diry), speed, rad , true);
+    mPlanets.push_back(tempPlanet);
+
+}
+
 #pragma mark - planetary actions
 
 void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
     if(distance(planet1->getPos(), planet2->getPos()) != 0) {     //wenn planet1 != planet2
                     //planet1 in planet2.gravRadius
-        if (enableCollide) {
-            if (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) {
-                planet1->collide(planet2);  //planet2 collidiert in planet1
+        if (enableCollide) {   //planet2 is not BlackHole
+            if (!planet2->isBlackHole && (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) ) {
+                if(!planet2->isBlackHole) planet1->collide(planet2);  //planet2 collides into planet1
+                else planet2->collide(planet1);
             }
         }
-        if (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos())) {
-            planet1->mRangedPlanets.push_back(planet2);      //planet1 wird von planet2 angezogen
+             //planet1 is in gravRad von planet2 AND planet1 is no BlackHole
+        if (!planet1->isBlackHole && (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos()))) {
+            planet1->mRangedPlanets.push_back(planet2);
         }
     }
 }
@@ -156,7 +182,7 @@ void PlanetManager::explodePlanet (Planet* planet) {
         float speed = 0.3;
         newRad += randFloat(-3.0,4.0);
         
-        Planet* tempPlanet = new Planet( vec2(x, y), dvec2(dirx, diry), speed, newRad );
+        Planet* tempPlanet = new Planet( vec2(x, y), vec2(dirx, diry), speed, newRad, false );
         mPlanets.push_back(tempPlanet);
     }
 }
