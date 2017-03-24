@@ -41,7 +41,7 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
         subdivisions(100);
     } else {
         mMass = mRadius * 2 * M_PI;
-        mGrav = mMass * 0.00003f;
+        mGrav = mMass * 0.00002f;
         mGravRadius = mRadius * 9;
         
         mRed = 0.0f;
@@ -127,7 +127,7 @@ void Planet::updateRadius(int newRadius) {
         mGrav = mMass * 0.000003f;
         mGravRadius = mRadius * 5;
     } else {
-        mGrav = mMass * 0.00003f;
+        mGrav = mMass * 0.00002f;
         mGravRadius = mRadius * 9;
     }
 }
@@ -149,7 +149,6 @@ void Planet::update() {
                 if(mRangedPlanets.back()->isCollided) {
                     invForeignForce(vec2(0,0));
                 } else setForeignForce(vec2(0,0));
-//                mRangedPlanets.pop_back();
             }
             mRangedPlanets.pop_back();
         }
