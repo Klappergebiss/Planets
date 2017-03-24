@@ -14,7 +14,7 @@ using std::list;
 
 #pragma mark - Planet Instance
 
-Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool isBlackHole) {
+Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
     mPos = pos;
     mDir = dir;
     mRadius = r;
@@ -28,7 +28,7 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool isBlackHole) {
     
     radius(mRadius);
     
-    if(!isBlackHole) {
+    if(!thisIsBlackHole) {
         mMass = mRadius * 2 * M_PI;
         mGrav = mMass * 0.000003f;
         mGravRadius = mRadius * 5;
@@ -40,8 +40,8 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool isBlackHole) {
         subdivisions(100);
     } else {
         mMass = mRadius * 2 * M_PI;
-        mGrav = mMass * 0.0005f;
-        mGravRadius = mRadius * 7;
+        mGrav = mMass * 0.00003f;
+        mGravRadius = mRadius * 9;
         
         mRed = 0.1f;
         mGreen = 0.1f;
@@ -126,8 +126,8 @@ void Planet::updateRadius(int newRadius) {
         mGrav = mMass * 0.000003f;
         mGravRadius = mRadius * 5;
     } else {
-        mGrav = mMass * 0.0005f;
-        mGravRadius = mRadius * 7;
+        mGrav = mMass * 0.00003f;
+        mGravRadius = mRadius * 9;
     }
 }
 
@@ -137,7 +137,8 @@ void Planet::update() {
         setForeignGrav(0.0f);
     } else {
         while(!mRangedPlanets.empty()) {
-            if (!mRangedPlanets.back()->isBlackHole || !isBlackHole) {
+                // if planet and planet
+            if (!isBlackHole) { // if planet then get attracted
                 setForeignGrav(mRangedPlanets.back()->getGrav());
                 if(mRangedPlanets.back()->isCollided) {
                     invForeignForce(mRangedPlanets.back()->getPos());
@@ -183,6 +184,9 @@ void Planet::collide(Planet* somePlanet) {
         
         updateRadius( mRadius + somePlanet->getRadius() * 0.2f );
     } else { // if blackhole
+        mRed = 0.95f;
+        mGreen = mRed;
+        mBlue = mRed;
         updateRadius( mRadius + somePlanet->getRadius() * 0.1f );
     }
     somePlanet->isCollided = true;

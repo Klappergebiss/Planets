@@ -44,7 +44,11 @@ void PlanetManager::update()
         (*p)->update();
         
             // if planet gets too huge, it explodes
-        if ((*p)->getRadius() > 60) {
+        if (!(*p)->isBlackHole && (*p)->getRadius() > 60) {
+            (*p)->mRangedPlanets.clear();
+            explodePlanet(*p);
+            p = mPlanets.erase(p);
+        } else if ((*p)->getRadius() > 100) {   //if blackHole, explode at radius > 100
             (*p)->mRangedPlanets.clear();
             explodePlanet(*p);
             p = mPlanets.erase(p);
@@ -57,10 +61,13 @@ void PlanetManager::update()
         }
     }
     
-        // balancing of amount of planets...
-    if (mPlanets.size() <= 9 and freq > 21) freq = freq - randInt(-2,5);
-    if (randInt(1000001) % (int)freq == 0) addPlanets(1);
-    if (mPlanets.size() > 31 and freq < 161) freq = freq + randInt(-4,7);   //21
+        // balancing the amount of planets...
+    if (mPlanets.size() <= 13 and freq > 21) freq = freq - randInt(-2,5);
+    if (randInt(1000001) % (int)freq == 0) {
+        addPlanets(1);
+//        cout << "added planet: " << mPlanets.back()->isBlackHole << endl;
+    }
+    if (mPlanets.size() > 37 and freq < 161) freq = freq + randInt(-4,7);   //21
     if ( !hasBlackHole && (randInt(1000001) % 1301 == 0)) {
         addBlackHole();
         hasBlackHole = true;
@@ -99,6 +106,8 @@ void PlanetManager::addPlanets( int amt )
         
         Planet* tempPlanet = new Planet( vec2(x, y), vec2(dirx, diry), speed, rad, false);
         mPlanets.push_back(tempPlanet);
+//        cout << "tempPlanet: " << tempPlanet->isBlackHole << "\t";
+//        cout << "and now: " << mPlanets.back()->isBlackHole << "\t";
     }
 }
 
@@ -136,13 +145,12 @@ void PlanetManager::addBlackHole() {
 void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
     if(distance(planet1->getPos(), planet2->getPos()) != 0) {     //wenn planet1 != planet2
                     //planet1 in planet2.gravRadius
-        if (enableCollide) {   //planet2 is not BlackHole
+        if (enableCollide) {   //planet2 is planet && touches planet1
             if (!planet2->isBlackHole && (planet1->getRadius() > distance(planet1->getPos(), planet2->getPos()) ) ) {
-                if(!planet2->isBlackHole) planet1->collide(planet2);  //planet2 collides into planet1
-                else planet2->collide(planet1);
+                planet1->collide(planet2);  //planet 2 collides into planet1
             }
         }
-             //planet1 is in gravRad von planet2 AND planet1 is no BlackHole
+             //planet1 is in gravRad of planet2 AND planet1 is a planet
         if (!planet1->isBlackHole && (planet2->getGravRadius() > distance(planet1->getPos(), planet2->getPos()))) {
             planet1->mRangedPlanets.push_back(planet2);
         }
@@ -152,7 +160,7 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
 void PlanetManager::explodePlanet (Planet* planet) {
     vec2 oldPos = planet->getPos();
     float oldRad = planet->getRadius()*0.6;
-    int amt = randInt(7,15);
+    int amt = randInt(7,17);        // 15
     float newRad = 2.2*planet->getRadius()/(float)amt;
     
     for (int i = 1; i<=amt; i++) {

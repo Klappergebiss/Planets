@@ -33,7 +33,7 @@ class Planet : public Circle {
     
 
 public:
-    Planet(vec2 pos, vec2 dir, float speed, int r, bool isBlackHole);
+    Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole);
     ~Planet();
     vec2 getPos();
     void setPos(vec2 pos);
