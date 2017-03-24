@@ -27,6 +27,7 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
     isCollided = false;
     
     radius(mRadius);
+    isBlackHole = thisIsBlackHole;
     
     if(!thisIsBlackHole) {
         mMass = mRadius * 2 * M_PI;
@@ -43,9 +44,9 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
         mGrav = mMass * 0.00003f;
         mGravRadius = mRadius * 9;
         
-        mRed = 0.1f;
-        mGreen = 0.1f;
-        mBlue = 0.1f;
+        mRed = 0.0f;
+        mGreen = 0.0f;
+        mBlue = 0.0f;
         
         subdivisions(23);
     }
@@ -184,9 +185,6 @@ void Planet::collide(Planet* somePlanet) {
         
         updateRadius( mRadius + somePlanet->getRadius() * 0.2f );
     } else { // if blackhole
-        mRed = 0.95f;
-        mGreen = mRed;
-        mBlue = mRed;
         updateRadius( mRadius + somePlanet->getRadius() * 0.1f );
     }
     somePlanet->isCollided = true;

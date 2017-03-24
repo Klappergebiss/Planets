@@ -63,10 +63,7 @@ void PlanetManager::update()
     
         // balancing the amount of planets...
     if (mPlanets.size() <= 13 and freq > 21) freq = freq - randInt(-2,5);
-    if (randInt(1000001) % (int)freq == 0) {
-        addPlanets(1);
-//        cout << "added planet: " << mPlanets.back()->isBlackHole << endl;
-    }
+    if (randInt(1000001) % (int)freq == 0) addPlanets(1);
     if (mPlanets.size() > 37 and freq < 161) freq = freq + randInt(-4,7);   //21
     if ( !hasBlackHole && (randInt(1000001) % 1301 == 0)) {
         addBlackHole();
@@ -106,8 +103,6 @@ void PlanetManager::addPlanets( int amt )
         
         Planet* tempPlanet = new Planet( vec2(x, y), vec2(dirx, diry), speed, rad, false);
         mPlanets.push_back(tempPlanet);
-//        cout << "tempPlanet: " << tempPlanet->isBlackHole << "\t";
-//        cout << "and now: " << mPlanets.back()->isBlackHole << "\t";
     }
 }
 
