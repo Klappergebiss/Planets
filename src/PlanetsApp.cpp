@@ -34,9 +34,9 @@ void PlanetsApp::setup()
     setWindowSize(getDisplay()->getWidth(), getDisplay()->getHeight());
     setFullScreen(true);
     
-    mPlanetManager.addStars(120);
+    mPlanetManager.addStars(135);
     
-    mPlanetManager.addPlanets(11);  //5
+    mPlanetManager.addPlanets(17);  //5
     hideCursor();
 }
 

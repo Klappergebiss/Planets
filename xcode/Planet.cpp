@@ -30,9 +30,9 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
     isBlackHole = thisIsBlackHole;
     
     if(!thisIsBlackHole) {
-        mMass = mRadius * 2 * M_PI;
-        mGrav = mMass * 0.000003f;
-        mGravRadius = mRadius * 5;
+        mMass = mRadius * M_PI; // * 2
+        mGrav = mMass * 0.00001f;   // 0.000003
+        mGravRadius = mRadius * 7;  //5
         
         mRed = randFloat(0.05, 0.7);
         mGreen = randFloat(0.05, 0.7);
@@ -40,9 +40,9 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
         
         subdivisions(100);
     } else {
-        mMass = mRadius * 2 * M_PI;
-        mGrav = mMass * 0.00002f;
-        mGravRadius = mRadius * 9;
+        mMass = mRadius * M_PI; // * 2
+        mGrav = mMass * 0.00007f;    // 0.00002f
+        mGravRadius = mRadius * 12;
         
         mRed = 0.0f;
         mGreen = 0.0f;
@@ -121,14 +121,14 @@ void Planet::setForeignGrav(float someGrav) {
 void Planet::updateRadius(int newRadius) {
     mRadius = newRadius;
     radius(mRadius);
-    mMass = mRadius * 2 * M_PI;
+    mMass = mRadius * M_PI; // * 2
     
     if(!isBlackHole) {
-        mGrav = mMass * 0.000003f;
-        mGravRadius = mRadius * 5;
+        mGrav = mMass * 0.00001f;   // 0.000003f
+        mGravRadius = mRadius * 7;  //5
     } else {
-        mGrav = mMass * 0.00002f;
-        mGravRadius = mRadius * 9;
+        mGrav = mMass * 0.00007f;    // 0.00002
+        mGravRadius = mRadius * 12; //9
     }
 }
 
@@ -136,11 +136,17 @@ void Planet::update() {
     if(mRangedPlanets.empty()) {
         setForeignForce(vec2(0,0));
         setForeignGrav(0.0f);
-    } else {
+    } else {    // if there are influencing planets
         while(!mRangedPlanets.empty()) {
-                // if planet and planet
+            
+            Planet* otherPlanet = mRangedPlanets.back();    //new
+            float normedDist = (distance(otherPlanet->getPos(), this->getPos()) - otherPlanet->getRadius()) / (otherPlanet->getGravRadius() - otherPlanet->getRadius());    //new
             if (!isBlackHole) { // if planet then get attracted
-                setForeignGrav(mRangedPlanets.back()->getGrav());
+//                setForeignGrav(mRangedPlanets.back()->getGrav());
+//                setForeignGrav( (otherPlanet->getGrav()) * cos(1.5 * normedDist));    //cosine
+                setForeignGrav( (otherPlanet->getGrav()) * (-normedDist+1));    //linear
+                
+                
                 if(mRangedPlanets.back()->isCollided) {
                     invForeignForce(mRangedPlanets.back()->getPos());
                 } else setForeignForce(mRangedPlanets.back()->getPos());

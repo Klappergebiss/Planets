@@ -62,9 +62,9 @@ void PlanetManager::update()
     }
     
         // balancing the amount of planets...
-    if (mPlanets.size() <= 13 and freq > 21) freq = freq - randInt(-2,5);
+    if (mPlanets.size() <= 15 and freq > 21) freq = freq - randInt(-2,5);
     if (randInt(1000001) % (int)freq == 0) addPlanets(1);
-    if (mPlanets.size() > 37 and freq < 161) freq = freq + randInt(-4,7);   //21
+    if (mPlanets.size() > 42 and freq < 161) freq = freq + randInt(-4,7);   //21
     if (!hasBlackHole && (randInt(1000001) % 3701 == 0)) addBlackHole();    //1301
 }
 
