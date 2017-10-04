@@ -3,6 +3,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/GeomIo.h"
 #include "cinder/Rand.h"
+//#include "cinder/gl/Fbo.h"  //for blur
 #include "Planet.hpp"
 #include "PlanetManager.hpp"
 #include <ctime>
@@ -20,6 +21,7 @@ class PlanetsApp : public App {
     void keyDown( KeyEvent event) override;
     
     PlanetManager mPlanetManager;
+//    gl::FboRef mFbo;    //for blur
 //    int test;
 };
 
@@ -38,6 +40,8 @@ void PlanetsApp::setup()
     
     mPlanetManager.addPlanets(17);  //5
     hideCursor();
+    
+//    mFbo->create(getDisplay()->getWidth(), getDisplay()->getHeight());    //for blur
 }
 
 
@@ -47,16 +51,33 @@ void PlanetsApp::update()
     
 }
 
+/*
+void PlanetsApp::draw() {   //test for blur
+    mFbo->bindFramebuffer(); // mFbo is your frame buffer object (ci::gl::Fbo)
+    gl::enableAlphaBlending();
+    gl::color( ColorAf( 0.0f, 0.0f, 0.0f, 0.5f ) );
+    gl::drawSolidRect( mFbo->getBounds() ); // Dim last frame
+    // Draw new stuff here
+    
+    mPlanetManager.draw();
+    mFbo->unbindFramebuffer();
+    
+    gl::color( ColorAf::black() );
+//    mShader.bind(); // Gaussian blur shader
+//    gl::draw( mFbo->getTexture() );
+//    mShader.unbind();
+}
+*/
+
 void PlanetsApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );  //not if test
-    
-    /*
-     if (test != 0) {
-        gl::clear( Color( 0, 0, 0 ) );
-        test--;
-     }
-    */
+    //
+    // if (test != 0) {
+    //    gl::clear( Color( 0, 0, 0 ) );
+    //    test--;
+    // }
+    //
     mPlanetManager.draw();
 }
 

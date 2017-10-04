@@ -30,7 +30,7 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
     isBlackHole = thisIsBlackHole;
     
     if(!thisIsBlackHole) {
-        mMass = mRadius * M_PI; // * 2
+        mMass = mRadius * 4.0; // mRadius * M_PI * 2
         mGrav = mMass * 0.00001f;   // 0.000003
         mGravRadius = mRadius * 7;  //5
         
@@ -38,9 +38,9 @@ Planet::Planet(vec2 pos, vec2 dir, float speed, int r, bool thisIsBlackHole) {
         mGreen = randFloat(0.05, 0.7);
         mBlue = randFloat(0.05, 0.5);
         
-        subdivisions(100);
+        subdivisions(53);
     } else {
-        mMass = mRadius * M_PI; // * 2
+        mMass = mRadius * 4.0; // mRadius * M_PI * 2
         mGrav = mMass * 0.00007f;    // 0.00002f
         mGravRadius = mRadius * 12;
         
@@ -93,10 +93,15 @@ int Planet::getRadius() {
     return mRadius;
 }
 
+float Planet::getSpeed() {
+    return mSpeed;
+}
+
 #pragma mark - set-methods
 
 void Planet::setPos(vec2 pos) {
     mPos = pos;
+    center(mPos);
 }
 
 void Planet::setDir(vec2 dir) {
@@ -105,15 +110,19 @@ void Planet::setDir(vec2 dir) {
 
     // to push bigger planet into direction of collided one
 void Planet::invForeignForce(vec2 someForce) {
-    mForeignForce += (mPos - someForce) * mForeignGrav * 70.0f;    //evtl 200 od 50 ??
+    mForeignForce += (mPos - someForce) * mForeignGrav * 14.0f;    //(ohne 70.0f) evtl 200 od 50 ??
 }
 
 void Planet::setForeignForce(vec2 someForce) {
-    mForeignForce += (someForce - mPos) * mForeignGrav;
+    mForeignForce += (someForce - mPos) * mForeignGrav*0.2f;    // (ohne)
 }
 
 void Planet::setForeignGrav(float someGrav) {
     mForeignGrav = someGrav;
+}
+
+void Planet::setSpeed(float someSpeed) {
+    mSpeed = someSpeed;
 }
 
 #pragma mark - update
@@ -121,13 +130,13 @@ void Planet::setForeignGrav(float someGrav) {
 void Planet::updateRadius(int newRadius) {
     mRadius = newRadius;
     radius(mRadius);
-    mMass = mRadius * M_PI; // * 2
+    mMass = mRadius * 4.0; // * 2
     
     if(!isBlackHole) {
         mGrav = mMass * 0.00001f;   // 0.000003f
         mGravRadius = mRadius * 7;  //5
     } else {
-        mGrav = mMass * 0.00007f;    // 0.00002
+        mGrav = mMass * 0.00004f;    // 0.00002
         mGravRadius = mRadius * 12; //9
     }
 }
@@ -143,14 +152,15 @@ void Planet::update() {
             float normedDist = (distance(otherPlanet->getPos(), this->getPos()) - otherPlanet->getRadius()) / (otherPlanet->getGravRadius() - otherPlanet->getRadius());    //new
             if (!isBlackHole) { // if planet then get attracted
 //                setForeignGrav(mRangedPlanets.back()->getGrav());
-//                setForeignGrav( (otherPlanet->getGrav()) * cos(1.5 * normedDist));    //cosine
-                setForeignGrav( (otherPlanet->getGrav()) * (-normedDist+1));    //linear
+                setForeignGrav( (otherPlanet->getGrav()) * cos(1.5 * pow(normedDist,2)));    //cosine
+//                setForeignGrav( (otherPlanet->getGrav()) * (-normedDist+1));    //linear
                 
                 
                 if(mRangedPlanets.back()->isCollided) {
                     invForeignForce(mRangedPlanets.back()->getPos());
                 } else setForeignForce(mRangedPlanets.back()->getPos());
             } else {
+//                mGrav = getGrav() + 0.00001f;     //let grow grav of blackhole constantly
                 setForeignGrav(0.0f);
                 if(mRangedPlanets.back()->isCollided) {
                     invForeignForce(vec2(0,0));
@@ -171,12 +181,10 @@ void Planet::draw() {
 void Planet::move() {
     if(!isBlackHole) {
         setPos(mPos + mDir*mSpeed + mForeignForce);
-        center(mPos);
-        setDir(mDir + mForeignForce * mForeignGrav);
-        hasMoved = true;
+        setDir(mDir + mForeignForce * mForeignGrav);    //mDir*0.7f + mForeignForce * mForeignGrav
+        hasMoved = true;                                //looks cool; but stops pieces after explosion
     } else {
         setPos(mPos);
-        center(mPos);
         setDir(mDir);
         hasMoved = true;
     }

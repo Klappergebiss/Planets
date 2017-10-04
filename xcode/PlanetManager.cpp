@@ -48,7 +48,7 @@ void PlanetManager::update()
             (*p)->mRangedPlanets.clear();
             explodePlanet(*p);
             p = mPlanets.erase(p);
-        } else if ((*p)->getRadius() > 130) {   //if blackHole, explode at radius > 100
+        } else if ((*p)->getRadius() > 130) {   //if blackHole, explode at radius > 130
             (*p)->mRangedPlanets.clear();
             explodePlanet(*p);
             p = mPlanets.erase(p);
@@ -63,7 +63,7 @@ void PlanetManager::update()
     
         // balancing the amount of planets...
     if (mPlanets.size() <= 15 and freq > 21) freq = freq - randInt(-2,5);
-    if (randInt(1000001) % (int)freq == 0) addPlanets(1);
+    if (randInt(10001) % (int)freq == 0) addPlanets(1); //1000001
     if (mPlanets.size() > 42 and freq < 161) freq = freq + randInt(-4,7);   //21
     if (!hasBlackHole && (randInt(1000001) % 3701 == 0)) addBlackHole();    //1301
 }
@@ -151,9 +151,9 @@ void PlanetManager::isInRange(Planet* planet1, Planet* planet2) {
 
 void PlanetManager::explodePlanet (Planet* planet) {
     vec2 oldPos = planet->getPos();
-    float oldRad = planet->getRadius()*0.6;
-    int amt = randInt(7,17);        // 15
-    float newRad = 2.2*planet->getRadius()/(float)amt;
+    float oldRad = planet->getRadius();
+    int amt = randInt(13,27);        // 15
+    float newRad = (2.2*oldRad)/(float)amt;
     
     hasBlackHole = planet->isBlackHole ? false : hasBlackHole;
     
@@ -162,27 +162,28 @@ void PlanetManager::explodePlanet (Planet* planet) {
         float y = oldPos.y;
         switch (i%4) {
             case 0:
-                x += i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
-                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
+                x += i * (oldRad/(float)amt) + randFloat(-5.0,5.0);
+                y -= sqrt(pow(oldRad*randFloat(0.4,1.0),2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);
                 break;
             case 1:
-                x -= i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
-                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
+                x -= i * (oldRad/(float)amt) + randFloat(-5.0,5.0);
+                y += sqrt(pow(oldRad*randFloat(0.4,1.0),2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);
                 break;
             case 2:
-                x -= i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
-                y -= sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
+                x -= i * (oldRad/(float)amt) + randFloat(-5.0,5.0);
+                y -= sqrt(pow(oldRad*randFloat(0.4,1.0),2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);
                 break;
             default:
-                x += i * (oldRad/(float)amt) + randFloat(-5.0,5.0);;
-                y += sqrt(pow(oldRad,2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);;
+                x += i * (oldRad/(float)amt) + randFloat(-5.0,5.0);
+                y += sqrt(pow(oldRad*randFloat(0.4,1.0),2) - pow((x - oldPos.x),2)) + randFloat(-5.0,5.0);
                 break;
         }
 
-        float dirx = (x - oldPos.x)*randFloat(0.2,0.25);
-        float diry = (y - oldPos.y)*randFloat(0.2,0.25);
-        float speed = 0.3;
-        newRad += randFloat(-3.0,4.0);
+        float dirMult = randFloat(0.52,1.3);
+        float dirx = ((x - oldPos.x)/4.2f) * dirMult;
+        float diry = ((y - oldPos.y)/4.2f) * dirMult;
+        float speed = 0.2;  //0.5
+        newRad += randFloat(-3.0,3.0);
         
         Planet* tempPlanet = new Planet( vec2(x, y), vec2(dirx, diry), speed, newRad, false );
         mPlanets.push_back(tempPlanet);

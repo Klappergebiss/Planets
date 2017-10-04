@@ -46,6 +46,8 @@ public:
     int getGravRadius();
     void updateRadius(int newRadius);
     int getRadius();
+    float getSpeed();
+    void setSpeed(float someSpeed);
     
     bool hasMoved;
     bool isCollided;
